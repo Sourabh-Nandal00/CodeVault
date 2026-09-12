@@ -3,7 +3,6 @@
 A simple console-based Snake Game built using Java.
 
 ## Features
-
 * Console-based gameplay
 * W, A, S, D controls
 * Randomly generated food
