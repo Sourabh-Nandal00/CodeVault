@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Constellation Lyrics</title>
+  <style>
+    :root {
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px);
+      --bg: #05060d;
+      --fg: #e9e9f3;
+      --muted: #8d90a8;
+      --accent: #ff6a3d;
+      --panel: #10121f
+    }
+
+    html {
+      height: 100%;
+      scroll-padding-top: env(safe-area-inset-top, 0px)
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", "Noto Sans Devanagari", "Nirmala UI", Mangal, sans-serif;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 12px
+    }
+
+    #stage {
+      position: relative;
+      flex: 1;
+      min-height: 55vh;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #07080f;
+      box-shadow: inset 0 0 40px 6px rgba(255, 106, 61, .55), inset 0 0 2px 1px rgba(255, 160, 110, .8)
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block
+    }
+
+    .bar {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    button,
+    label.btn {
+      background: var(--panel);
+      color: var(--fg);
+      border: 1px solid #2a2d45;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer
+    }
+
+    button.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #16080a;
+      font-weight: 600
+    }
+
+    input[type=file] {
+      display: none
+    }
+
+    #time {
+      margin-left: auto;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      font-size: 13px
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      background: var(--panel);
+      color: var(--fg);
+      border: 1px solid #2a2d45;
+      border-radius: 10px;
+      padding: 10px;
+      font: 13px/1.5 ui-monospace, Menlo, monospace;
+      box-sizing: border-box;
+      resize: vertical
+    }
+
+    p.hint {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12.5px;
+      line-height: 1.5
+    }
+  </style>
+</head>
+
+<body>
+  <div id="stage"><canvas id="c"></canvas></div>
+  <div class="bar">
+    <button class="primary" id="play">Play</button>
+    <label class="btn">Load song<input type="file" id="file" accept="audio/*"></label>
+    <button id="apply">Apply lyrics</button>
+    <span id="time">0:00</span>
+    <input type="range" id="seek" min="0" max="1000" value="0" style="flex:1 1 100%;accent-color:#ff6a3d">
+  </div>
+  <textarea id="lrc" spellcheck="false">[00:00.0] Somebody left a light on in the sky
+[00:48.42] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे
+[00:52.55] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे
+[00:56.45] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे
+[01:00.49] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे
+[01:03.48] आँखें तेरी...
+[01:19.47] आँखें तेरी कितनी हसीं
+[01:29.28] के इनका आशिक़ मैं बन गया हूँ
+[01:37.26] मुझको बसा ले इनमें तू
+[01:43.52] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे (इश्क़ है)
+[01:48.51] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे (इश्क़ है)
+[01:52.55] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे
+[01:56.44] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे (इश्क़ है)
+[02:00.59] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे
+[02:04.56] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे
+[02:09.40] के इनका आशिक़ मैं बन गया हूँ
+[02:17.23] मुझको बसा ले इनमें तू
+[02:25.28] मुझसे ये हर घड़ी मेरा दिल कहे
+[02:33.13] "तुम ही हो उसकी आरज़ू"
+[02:41.38] मुझसे ये हर घड़ी मेरे लब कहें
+[02:49.36] "तेरी ही हो सब गुफ़्तगू"
+[02:55.34] बातें तेरी इतनी हसीं
+[03:05.28] मैं याद इनको जब करता हूँ
+[03:13.38] फूलों सी आए ख़ुशबू
+[03:20.01]
+[03:53.06] रख लूँ छुपा के मैं कहीं तुझको
+[04:01.26] साया भी तेरा ना मैं दूँ
+[04:09.27] रख लूँ बना के कहीं घर मैं तुझे
+[04:17.26] साथ तेरे मैं ही रहूँ
+[04:23.36] ज़ुल्फें तेरी इतनी घनी
+[04:33.23] देख के इनको ये सोचता हूँ
+[04:41.39] साए में इनके मैं जियूँ
+[04:47.64] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे (इश्क़ है)
+[04:52.65] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे (इश्क़ है)
+[04:56.55] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे
+[05:00.68] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे (इश्क़ है)
+[05:04.64] मौला मेरे, मौला मेरे, मौला मेरे, मौला मेरे
+[05:08.62] मौला मेरे, मौला मेरे (मौला है, मौला मेरा)
+[05:12.44] दिल यही बोला मेरा, दिल यही बोला, यारा
+[05:16.41] राज़ ये उसने है मुझपर खोला के है
+[05:20.58] "इश्क़, मोहब्बत जिसके दिल में
+[05:24.48] उसको पसंद करता है, मौला मेरा"
+[05:28.52] दिल यही बोला मेरा, दिल यही बोला, यारा
+[05:32.53] राज़ ये उसने है मुझपर खोला के है
+[05:36.42] "इश्क़, मोहब्बत जिसके दिल में
+[05:40.42] उसको पसंद करता है, मौला मेरा"
+[05:44.70] दिल यही बोला मेरा, दिल यही बोला, यारा
+[05:48.51] राज़ ये उसने है मुझपर खोला के है
+[05:52.54] "इश्क़-मोहब्बत जिसके दिल में
+[05:56.57] उसको पसंद करता है..."
+[05:59.45]</textarea>
+  <p class="hint">Paste your own lyrics in LRC format (<b>[mm:ss.s] words</b>) and load an audio file to sync. Without
+    audio it plays on a timer. Demo lyrics are original.</p>
+
+  <script>
+    (function () {
+      const cv = document.getElementById('c'), ctx = cv.getContext('2d');
+      const stage = document.getElementById('stage');
+      const playBtn = document.getElementById('play'), timeEl = document.getElementById('time');
+      const lrcEl = document.getElementById('lrc');
+      let W = 0, H = 0, dpr = 1, words = [], lines = [], audio = null, playing = false, t0 = 0, offset = 0, endT = 0;
+
+      function resize() {
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const r = stage.getBoundingClientRect(); W = r.width; H = r.height;
+        cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        if (words.length) layout();
+      }
+      window.addEventListener('resize', resize);
+
+      function rng(seed) { return function () { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296 } }
+
+      function parse() {
+        lines = [];
+        lrcEl.value.split('\n').forEach(s => {
+          const m = s.match(/^\s*\[(\d+):(\d+(?:\.\d+)?)\]\s*(.*)$/);
+          if (m) lines.push({ t: +m[1] * 60 + +m[2], text: m[3].trim() });
+        });
+        lines.sort((a, b) => a.t - b.t);
+        words = [];
+        lines.forEach((ln, li) => {
+          if (!ln.text) return;
+          const next = lines[li + 1] ? lines[li + 1].t : ln.t + 3.5;
+          const ws = ln.text.split(/\s+/);
+          const span = (next - ln.t) * 0.85;
+          ws.forEach((w, wi) => words.push({ w, li, t: ln.t + span * wi / ws.length, i: wi, n: ws.length }));
+        });
+        endT = lines.length ? lines[lines.length - 1].t + 1 : 0;
+        layout();
+      }
+
+      function layout() {
+        const r = rng(7), mx = 60, my = 70, placed = {};
+        words.forEach(o => {
+          const grp = placed[o.li] = placed[o.li] || [];
+          let best = null, bd = -1;
+          for (let k = 0; k < 30; k++) {
+            const p = { x: mx + r() * (W - 2 * mx), y: my + r() * (H - 2 * my) };
+            let d = 1e9; grp.forEach(q => { d = Math.min(d, Math.hypot(p.x - q.x, p.y - q.y)) });
+            if (grp.length) { const prev = grp[grp.length - 1]; const dp = Math.hypot(p.x - prev.x, p.y - prev.y); if (dp < W * 0.12) d = 0 }
+            if (d > bd) { bd = d; best = p }
+          }
+          o.x = best.x; o.y = best.y; grp.push(o);
+        });
+      }
+
+      function star(x, y, s, col) {
+        ctx.fillStyle = col; ctx.beginPath();
+        for (let k = 0; k < 8; k++) { const a = k * Math.PI / 4, rad = k % 2 ? s * .28 : s; ctx.lineTo(x + Math.cos(a) * rad, y + Math.sin(a) * rad) }
+        ctx.closePath(); ctx.fill();
+      }
+
+      function now() {
+        if (audio && audio.src) return audio.currentTime;
+        return playing ? offset + (performance.now() - t0) / 1000 : offset;
+      }
+
+      function draw() {
+        const T = now();
+        ctx.clearRect(0, 0, W, H);
+        // soft glow background
+        const g = ctx.createRadialGradient(W / 2, H / 2, 10, W / 2, H / 2, Math.max(W, H) * .7);
+        g.addColorStop(0, 'rgba(30,32,60,.35)'); g.addColorStop(1, 'rgba(5,6,13,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+
+        // current line index
+        let cur = -1; lines.forEach((l, i) => { if (l.t <= T) cur = i });
+        const vis = words.filter(o => o.t <= T && (o.li === cur || o.li === cur - 1));
+        const lastIdx = vis.length ? vis[vis.length - 1] : null;
+
+        vis.forEach((o, k) => {
+          const age = T - o.t;
+          const lineFade = o.li === cur ? 1 : Math.max(0, 1 - (T - lines[cur].t) / 1.6);
+          const prev = vis[k - 1];
+          // connecting line within same line group
+          if (prev && prev.li === o.li) {
+            const p = Math.min(1, age / 0.35);
+            ctx.strokeStyle = 'rgba(170,176,220,' + (0.55 * lineFade) + ')'; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(prev.x, prev.y);
+            ctx.lineTo(prev.x + (o.x - prev.x) * p, prev.y + (o.y - prev.y) * p); ctx.stroke();
+          }
+        });
+        vis.forEach(o => {
+          const age = T - o.t;
+          const lineFade = o.li === cur ? 1 : Math.max(0, 1 - (T - lines[cur].t) / 1.6);
+          const isCur = o === lastIdx;
+          const k = Math.min(1, age / 1.1);
+          const e = 1 - Math.pow(1 - k, 3);
+          const size = isCur ? 16 + 26 * (1 - e) + (age < 0.9 ? 10 * (1 - age / 0.9) : 0) : 14;
+          const a = (isCur ? 1 : 0.75) * lineFade;
+          if (isCur) {
+            const gr = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, 26);
+            gr.addColorStop(0, 'rgba(255,106,61,.55)'); gr.addColorStop(1, 'rgba(255,106,61,0)');
+            ctx.fillStyle = gr; ctx.fillRect(o.x - 30, o.y - 30, 60, 60);
+            star(o.x, o.y, 9, 'rgba(255,120,80,' + a + ')');
+          } else star(o.x, o.y, 5, 'rgba(190,195,235,' + a + ')');
+          ctx.font = '600 ' + size + 'px Inter,system-ui,"Noto Sans Devanagari","Nirmala UI",Mangal,sans-serif';
+          ctx.textBaseline = 'middle';
+          const tw = ctx.measureText(o.w).width;
+          let tx = o.x + 14; if (tx + tw > W - 8) tx = o.x - 14 - tw;
+          ctx.fillStyle = 'rgba(233,233,243,' + a + ')';
+          ctx.fillText(o.w, tx, o.y + (isCur ? -size * .1 : 0));
+        });
+
+        const m = Math.floor(T / 60), s = Math.floor(T % 60);
+        timeEl.textContent = m + ':' + String(s).padStart(2, '0');
+        if (document.activeElement !== seek) seek.value = Math.min(1000, Math.round(T / total() * 1000));
+        if (playing && !(audio && audio.src) && T > endT + 1.5) { playing = false; offset = 0; playBtn.textContent = 'Play' }
+        requestAnimationFrame(draw);
+      }
+
+      playBtn.onclick = () => {
+        if (audio && audio.src) {
+          if (audio.paused) { audio.play(); playing = true; playBtn.textContent = 'Pause' }
+          else { audio.pause(); playing = false; playBtn.textContent = 'Play' }
+          return;
+        }
+        if (!playing) { t0 = performance.now(); playing = true; playBtn.textContent = 'Pause' }
+        else { offset = now(); playing = false; playBtn.textContent = 'Play' }
+      };
+      document.getElementById('apply').onclick = () => { parse(); offset = lines.length ? Math.max(0, lines[0].t - 1) : 0; t0 = performance.now(); if (audio && audio.src) audio.currentTime = offset };
+      document.getElementById('file').onchange = e => {
+        const f = e.target.files[0]; if (!f) return;
+        if (audio) { audio.pause() }
+        audio = new Audio(URL.createObjectURL(f));
+        audio.onended = () => { playing = false; playBtn.textContent = 'Play' };
+        playing = false; playBtn.textContent = 'Play';
+      };
+
+      const seek = document.getElementById('seek');
+      function total() { return (audio && audio.src && isFinite(audio.duration)) ? audio.duration : endT + 2 }
+      seek.oninput = () => { const v = seek.value / 1000 * total(); if (audio && audio.src) audio.currentTime = v; else { offset = v; t0 = performance.now() } };
+      resize(); parse(); draw();
+    })();
+  </script>
+</body>
+
+</html>
